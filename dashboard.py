@@ -11,7 +11,7 @@ def fileId_from_url(url):
     raw_fileId = re.findall("~[A-z.0-9]+/[0-9]+", url)[0][1: ]
     return raw_fileId.replace('/', ':')
 
-username = 'VladDB'
+username = '"VladDB"'
 password = 'Vlad03042001'
 database = 'localhost:1521/xe'
 
@@ -20,12 +20,12 @@ cursor = connection.cursor()
 
 cursor.execute("""
 SELECT
-TEAM, sum(GOALS)
-    FROM (SELECT "EPL".HOME_TEAM as TEAM, sum("EPL".HOME_GOALS) as GOALS from EPL 
-    GROUP BY "EPL".HOME_TEAM
-    UNION
-    SELECT "EPL".AWAY_TEAM as TEAM, sum("EPL".AWAY_GOALS) as GOALS from EPL 
-    GROUP BY "EPL".AWAY_TEAM)
+    TEAM, sum(GOALS)
+        FROM (SELECT MATCH.TEAM_HOME_NAME as TEAM, sum(MATCH.MATCH_HOME_GOALS) as GOALS from MATCH 
+        GROUP BY MATCH.TEAM_HOME_NAME
+        UNION
+        SELECT MATCH.TEAM_AWAY_NAME as TEAM, sum(MATCH.MATCH_AWAY_GOALS) as GOALS from MATCH 
+        GROUP BY MATCH.TEAM_AWAY_NAME)
 GROUP BY TEAM
 ORDER BY sum(GOALS) DESC
 """)
@@ -71,8 +71,8 @@ fig = go.Figure(data=data, layout=layout)
 track_duration_artist = py.plot(fig, filename='duration -artist')
 
 cursor.execute( """
-SELECT "EPL".RESULTS, count(*) FROM "EPL"
-GROUP BY "EPL".RESULTS
+SELECT MATCH.MATCH_RESULTS, count(*) FROM MATCH
+GROUP BY MATCH.MATCH_RESULTS
 """)
 artist = []
 percent = []
@@ -90,10 +90,10 @@ artist_percent = py.plot([pie_data], filename='artist-percent')
 
 
 cursor.execute( """
-SELECT "EPL".SEASON, count(*) FROM "EPL"
-WHERE "EPL".RESULTS = 'D'
-GROUP BY "EPL".SEASON
-ORDER BY "EPL".SEASON
+SELECT MATCH.SEASON_PERIOD, count(*) FROM MATCH
+WHERE MATCH.MATCH_RESULTS = 'D'
+GROUP BY MATCH.SEASON_PERIOD
+ORDER BY MATCH.SEASON_PERIOD
 """)
 
 draw = []

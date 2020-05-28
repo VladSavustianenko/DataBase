@@ -8,7 +8,7 @@ database = 'localhost/xe'
 connection = cx_Oracle.connect(username, password, database)
 cur = connection.cursor()
 
-tables = [ 'home_team', 'away_team', 'home_goals', 'away_goals', 'result', 'season' ]
+tables = [ 'team_home_name', 'team_away_name', 'match_home_goals', 'match_away_goals', 'match_results', 'season_period' ]
 
 for table in tables:
     with open(table + '.csv', 'w', newline='') as csv_file:
